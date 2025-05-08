@@ -1,1 +1,0 @@
-# COMSOL-Roll-Cage-Simulation
