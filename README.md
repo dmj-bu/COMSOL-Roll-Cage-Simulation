@@ -1,4 +1,42 @@
-[📄 View Full COMSOL Simulation Documentation (PDF)](COMSOL%20Simulation%20Documentation.pdf)
+# Roll Cage Deformation Simulation in COMSOL
+
+**Daniel Jones – Boston University – ME 700 Final Project**
+
+This project builds on a previous roll cage design for a rescue snowmobile, with the goal of verifying its effectiveness in severe crash scenarios. Using COMSOL Multiphysics, I simulate various crash configurations to determine how the structure behaves under nonlinear deformation and identify potential failure modes like buckling. 
+
+By enabling geometric nonlinearity, applying crash-equivalent loads, and refining the mesh both through element size and polynomial order (p- and h-refinement), the simulation offers insights into the structural limits of the design. Additionally, it highlights solver behavior near critical instability thresholds, providing guidance on model robustness and post-buckling limitations.
+
+---
+
+## Full Report PDF
+
+For a complete breakdown of the modeling process, solver assumptions, mesh settings:
+
+*The CAD files for running the simulation are included in this repository, but the COMSOL files are too large to include here.
+
+[**View Full COMSOL Simulation Documentation (PDF)**](COMSOL%20Simulation%20Documentation.pdf)
+
+---
+
+## Simulation Result GIFs
+**The following animations show crash deformation results under increasing impact speeds, ranging from 10 mph to 40 mph in 10 mph increments.**  
+Each GIF corresponds to a different crash scenario, helping visualize how the structure responds under varying load directions and severities.
+
+### Full Top-Down Roll Over
+This simplified, symmetric loading case applies a vertical crash force to the top of the roll cage and serves as a baseline for comparing deformation behavior. While less realistic than other crash types, it reveals overall structural flexibility and initial buckling tendencies.
+ ![Crash Deformation 10–45mph](deformation_10-45mph_Crash.gif)
+
+### Frontal Rollover Impact
+This scenario simulates a forward-tipping crash, applying an angled force to the front portion of the roll cage. It better reflects real-world rollover events where forward momentum leads to impact on the front end of the structure.
+ ![Frontal Crash Deformation](deformation_10-45mph_Front_Crash.gif)
+
+### Side Rollover Impact
+This animation shows deformation from a lateral rollover crash, where the snowmobile impacts the ground sideways. The simulation reveals significant deflection into the rear passenger head space, indicating a possible structural vulnerability.
+ ![Side Crash Deformation](deformation_10-45mph_Side_Crash.gif)
+
+### Updated Design with Rear Support Bracket
+To address the lateral deformation observed in the previous case, this updated model includes an added rear support bracket. The resulting animation demonstrates reduced deflection into the passenger zone, validating the effectiveness of the design modification.
+ ![Side Crash Updated](deformation_10-45mph_Side_Crash_Updated.gif)
 
 # Roll Cage COMSOL Simulation: Finite Element Method Behind the Interface
 
