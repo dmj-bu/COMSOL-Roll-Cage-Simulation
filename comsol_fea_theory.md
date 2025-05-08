@@ -1,6 +1,6 @@
 # Roll Cage COMSOL Simulation: Finite Element Method Behind the Interface
 
-This document explains **how COMSOL Multiphysics internally models a solid mechanics simulation** like the roll cage deformation study described, using the finite element method (FEM). It focuses on theory, implementation, and equation formulation — not GUI instructions.
+This document explains **how COMSOL Multiphysics internally models a solid mechanics simulation** like the roll cage deformation study described, using the finite element method (FEM).
 
 ---
 
