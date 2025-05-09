@@ -42,8 +42,8 @@ To address the lateral deformation observed in the previous case, this updated m
 
 This document explains **how COMSOL Multiphysics internally models a solid mechanics simulation** like the roll cage deformation study described, using the finite element method (FEM).
 
----
 
+---
 ## 1. Governing Equations
 
 In linear elasticity (prior to plasticity or hyperelasticity), COMSOL solves:
@@ -61,7 +61,7 @@ $$
 Where:
 - $\boldsymbol{\sigma}$ is the Cauchy stress tensor
 - $\mathbf{u}$ is the displacement vector field
-- $\mathbf{f}$ is the body force (e.g., gravity)
+- $\mathbf{f}$ is the body force
 - $\rho$ is the density
 
 ### Constitutive Law (Linear Elastic Material)
@@ -89,7 +89,7 @@ $$
 
 To apply FEM, COMSOL rewrites the strong form as a weak (variational) form.
 
-Multiply by a test function $\mathbf{v}$ and integrate over the domain $\Omega$:
+This is achieved by multiplying by a test function $\mathbf{v}$ and integrating over the domain $\Omega$:
 
 $$
 \int_{\Omega} \boldsymbol{\sigma} : \nabla \mathbf{v} \, d\Omega = \int_{\Omega} \mathbf{f} \cdot \mathbf{v} \, d\Omega + \int_{\Gamma_t} \bar{\mathbf{t}} \cdot \mathbf{v} \, d\Gamma
@@ -97,13 +97,25 @@ $$
 
 Boundary conditions:
 - Essential (Dirichlet): $\mathbf{u} = \mathbf{u}_0$ on $\Gamma_u$
+
+  *These are represented by the **Fixed Constraints** under Solid Mechanics > Boundaries
+
 - Natural (Neumann): $\boldsymbol{\sigma} \cdot \mathbf{n} = \bar{\mathbf{t}}$ on $\Gamma_t$
+
+  *These are represented by the **Boundary Load Constraints**, such as applying -F_Crash in the y or z directions.
 
 ---
 
 ## 3. Discretization with Shape Functions
 
-COMSOL interpolates displacement with nodal shape functions:
+Discretization was set under **Solid Mechanics > Discretization > Displacement Field** with the following options:
+- Study 1: Linear
+- Study 2: Quadratic Serendipity
+- Study 3: Quadratic Lagrange
+  
+COMSOL interpolates displacement with nodal shape functions
+
+Shape functions \( N_i(x) \) approximate displacement as:
 
 $$
 \mathbf{u}(x) \approx \sum_i N_i(x) \mathbf{u}_i
@@ -111,8 +123,8 @@ $$
 
 - $N_i$ are the shape functions (e.g., linear or quadratic polynomials)
 - $\mathbf{u}_i$ are the nodal displacements
-
-The weak form becomes a **system of algebraic equations**:
+  
+The resulting weak form is assembled into a matrix system:
 
 $$
 \mathbf{K}\mathbf{U} = \mathbf{F}
@@ -127,24 +139,27 @@ Where:
 
 ## 4. Geometric Nonlinearity
 
-In COMSOL, enabling *Include Geometric Nonlinearity* modifies strain definitions to include nonlinear terms (e.g., Green-Lagrange strain):
+In **Study Settings > Stationary**, the box for **Include geometric nonlinearity** was checked, which enables the **Total Lagrangian** formulation in COMSOL.
+
+The strain tensor becomes:
 
 $$
 \boldsymbol{E} = \frac{1}{2}(\nabla \mathbf{u} + \nabla \mathbf{u}^T + \nabla \mathbf{u}^T \nabla \mathbf{u})
 $$
 
-And updates stress from the second Piola-Kirchhoff stress $\mathbf{S}$ to account for nonlinear deformation gradients.
-
-COMSOL uses **Total Lagrangian formulation** if chosen explicitly, otherwise the update method depends on the solver and selected formulation.
+This is critical for capturing buckling and large-displacement behavior, particularly in the rollover scenarios.
 
 ---
 
 ## 5. Mesh and Refinement
 
-The geometry is discretized into tetrahedral elements (in 3D):
+For **H-refinement**, the mesh was generated using **Free Tetrahedral** with the following settings:
 
-- **P-refinement** increases polynomial order of shape functions
-- **H-refinement** increases mesh density (more elements)
+- Normal size failed due to narrow faces
+- Fine size also failed
+- Final mesh used: **Finer** (selected under `Mesh 1 > Size`)
+
+For **p-refinement**, element order was varied through the Discretization node as described in Section 3.
 
 Mesh convergence ensures accuracy of strain energy, stress distribution, and failure modes like buckling.
 
@@ -152,13 +167,23 @@ Mesh convergence ensures accuracy of strain energy, stress distribution, and fai
 
 ## 6. Solvers
 
-COMSOL assembles and solves:
+Each study used a **Stationary solver** configured as follows:
+- **Linearity**: set to **Nonlinear** under **Study > Solver Configurations > Stationary Solver 1 > General**
+- **Geometric Nonlinearity**: enabled in **Study Settings**
+
+The governing system of equations:
 
 $$
 \mathbf{K(U)} \mathbf{U} = \mathbf{F}
 $$
 
-If the system is **nonlinear**, Newton-Raphson iterations are used:
+COMSOL uses Newton-Raphson iterations:
+
+$$
+\mathbf{K}^{(k)} \Delta \mathbf{U}^{(k)} = -\mathbf{R}^{(k)}, \quad \mathbf{U}^{(k+1)} = \mathbf{U}^{(k)} + \Delta \mathbf{U}^{(k)}
+$$
+
+At each iteration \( k \), the solver performs the following steps:
 1. Compute residual $\mathbf{R(U)} = \mathbf{K(U)} \mathbf{U} - \mathbf{F}$
 2. Linearize and solve: $\mathbf{K}_T \Delta \mathbf{U} = -\mathbf{R}$
 3. Update: $\mathbf{U}^{(k+1)} = \mathbf{U}^{(k)} + \Delta \mathbf{U}$
@@ -169,11 +194,15 @@ This repeats until the residual is below a tolerance.
 
 ## 7. Crash Load Application
 
-Crash force is modeled via:
+Crash force was defined using:
 
 $$
 F_{\text{Crash}} = \frac{m \Delta v}{\Delta t}
 $$
+
+- delta_v was defined as a parameter swept from 10 to 40 mph
+- m = 700 lb
+- delta t = 0.05 s (assumed impact time)
 
 This is applied as a **boundary force** on selected surfaces. COMSOL distributes the force over the selected boundary elements.
 
@@ -184,11 +213,9 @@ This is applied as a **boundary force** on selected surfaces. COMSOL distributes
 Because large displacements and geometric stiffness changes are included:
 
 - COMSOL captures **elastic instability** (buckling)
-- No post-buckling plasticity is modeled unless a plastic material model is used
+- No post-buckling plasticity is modeled because an elastic material model is used
 
-To detect collapse onset, one can monitor:
-- Divergence of nonlinear solver
-- Sharp change in stress/deformation with small load increase
+Non-convergence at crash speeds higher than delta_v = 45 mph suggests that the simulation has reached the critical buckling load. Beyond this limit, the structure enters the post-buckling regime, where the solver's underlying assumptions no longer hold.
 
 ---
 
