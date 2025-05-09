@@ -8,6 +8,21 @@ By enabling geometric nonlinearity, applying crash-equivalent loads, and refinin
 
 ---
 
+## Class Skills and Methods Demonstrated
+
+While I had prior experience using COMSOL, this project showcases several new capabilities developed through this course:
+
+- **Understanding and Applying Geometric Nonlinearity**: I learned how to interpret nonlinear structural behavior such as post-buckling deformation and configure solvers to handle stability loss in large deformation regimes.
+- **Newton-Raphson Solver Mechanics**: I now understand how COMSOL's nonlinear solver operates internally—assembling the residual, linearizing the system, and performing iterative updates until convergence is reached.
+- **p- and h-Refinement for Mesh Sensitivity**: I gained experience running structured studies to verify convergence behavior through both mesh density (h-refinement) and element order (p-refinement), something I had never implemented before.
+- **Theory-Driven Modeling**: I was able to trace the implementation back to weak form derivations and understand the mathematical assumptions underlying stress-strain calculations, stiffness matrix assembly, and material linearity.
+- **Interpreting Non-Convergence and Stability Loss**: This project taught me to recognize solver failure as a meaningful physical result, such as identifying the onset of post-buckling behavior.
+- **Markdown Documentation for FEA Projects**: I developed a clear and technical documentation workflow in Markdown using GitHub, organizing a structured README with rendered equations, animations, and solver analysis.
+  
+These skills apply theory to simulation practice, bridging coursework with a realistic mechanical engineering challenge.
+
+---
+
 ## Full Report PDF
 
 For a complete breakdown of the modeling process, solver assumptions, mesh settings:
