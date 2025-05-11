@@ -1,4 +1,0 @@
-ChatGPT-4o was used to help write and refine the README.md and Markdown documentation.
-ChatGPT-4o was used to generate LaTeX math formatting and syntax for equations.
-ChatGPT-4o was used to describe how Newton-Raphson iterations are implemented.
-ChatGPT-4o was used to help interpret stress/strain results and mesh warnings.
