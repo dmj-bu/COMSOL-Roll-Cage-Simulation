@@ -49,17 +49,17 @@ This document explains **how COMSOL Multiphysics internally models a solid mecha
 In linear elasticity (prior to plasticity or hyperelasticity), COMSOL solves:
 
 $$
-\nabla \cdot \boldsymbol{\sigma} + \mathbf{f} = \rho \ddot{\mathbf{u}}
+\nabla \cdot {\sigma} + \mathbf{f} = \rho \ddot{\mathbf{u}}
 $$
 
 In the quasistatic case (stationary study with no inertial effects):
 
 $$
-\nabla \cdot \boldsymbol{\sigma} + \mathbf{f} = 0
+\nabla \cdot {\sigma} + \mathbf{f} = 0
 $$
 
 Where:
-- $\boldsymbol{\sigma}$ is the Cauchy stress tensor
+- ${\sigma}$ is the Cauchy stress tensor
 - $\mathbf{u}$ is the displacement vector field
 - $\mathbf{f}$ is the body force
 - $\rho$ is the density
@@ -68,7 +68,7 @@ Where:
 COMSOL uses Hooke’s law for isotropic materials:
 
 $$
-\boldsymbol{\sigma} = \lambda (\nabla \cdot \mathbf{u}) \mathbf{I} + 2\mu \boldsymbol{\varepsilon}
+{\sigma} = \lambda (\nabla \cdot \mathbf{u}) \mathbf{I} + 2\mu {\varepsilon}
 $$
 
 where $\lambda$ and $\mu$ are the Lamé parameters:
@@ -80,7 +80,7 @@ $$
 and the strain-displacement relation is:
 
 $$
-\boldsymbol{\varepsilon} = \frac{1}{2}(\nabla \mathbf{u} + \nabla \mathbf{u}^T)
+{\varepsilon} = \frac{1}{2}(\nabla \mathbf{u} + \nabla \mathbf{u}^T)
 $$
 
 ---
@@ -92,7 +92,7 @@ To apply FEM, COMSOL rewrites the strong form as a weak (variational) form.
 This is achieved by multiplying by a test function $\mathbf{v}$ and integrating over the domain $\Omega$:
 
 $$
-\int_{\Omega} \boldsymbol{\sigma} : \nabla \mathbf{v} \, d\Omega = \int_{\Omega} \mathbf{f} \cdot \mathbf{v} \, d\Omega + \int_{\Gamma_t} \bar{\mathbf{t}} \cdot \mathbf{v} \, d\Gamma
+\int_{\Omega} {\sigma} : \nabla \mathbf{v} \, d\Omega = \int_{\Omega} \mathbf{f} \cdot \mathbf{v} \, d\Omega + \int_{\Gamma_t} \bar{\mathbf{t}} \cdot \mathbf{v} \, d\Gamma
 $$
 
 Boundary conditions:
@@ -100,7 +100,7 @@ Boundary conditions:
 
   *These are represented by the **Fixed Constraints** under Solid Mechanics > Boundaries
 
-- Natural (Neumann): $\boldsymbol{\sigma} \cdot \mathbf{n} = \bar{\mathbf{t}}$ on $\Gamma_t$
+- Natural (Neumann): ${\sigma} \cdot \mathbf{n} = \bar{\mathbf{t}}$ on $\Gamma_t$
 
   *These are represented by the **Boundary Load Constraints**, such as applying -F_Crash in the y or z directions.
 
@@ -144,7 +144,7 @@ In **Study Settings > Stationary**, the box for **Include geometric nonlinearity
 The strain tensor becomes:
 
 $$
-\boldsymbol{E} = \frac{1}{2}(\nabla \mathbf{u} + \nabla \mathbf{u}^T + \nabla \mathbf{u}^T \nabla \mathbf{u})
+{E} = \frac{1}{2}(\nabla \mathbf{u} + \nabla \mathbf{u}^T + \nabla \mathbf{u}^T \nabla \mathbf{u})
 $$
 
 This is critical for capturing buckling and large-displacement behavior, particularly in the rollover scenarios.
